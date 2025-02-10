@@ -20,12 +20,18 @@ class LLMClient(ABC):
         # Set the path to your DeepSeek.json file
         file_path = os.path.join('..', 'cfg', f'{self.service_name}.json')
 
-        # Open and load the JSON file
-        with open(file_path, 'r') as f:
-            config = json.load(f)
+        # Initialize username and password as empty strings
+        self.username = ''
+        self.password = ''
 
-        self.username = config["username"]
-        self.password = config["password"]
+        # Check if the file exists before opening it
+        if os.path.exists(file_path):
+            with open(file_path, 'r') as f:
+                config = json.load(f)
+                self.username = config.get("username", '')
+                self.password = config.get("password", '')
+        
+        return self.username, self.password
 
     @abstractmethod
     def generate_text(self, prompt: str) -> str:
