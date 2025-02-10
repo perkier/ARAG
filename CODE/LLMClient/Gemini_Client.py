@@ -1,5 +1,7 @@
 import requests
 
+from google import genai
+
 from Base_Client import LLMClient
 
 class GeminiClient(LLMClient):
@@ -14,10 +16,12 @@ class GeminiClient(LLMClient):
 
         super().__init__(self.service_name)
 
+        self.client = genai.Client(api_key=self.password)
+
     def generate_text(self, prompt: str) -> str:
-        response = requests.post(
-            self.BASE_URL,
-            headers={"Authorization": f"Bearer {self.api_key}"},
-            json={"prompt": prompt}
+
+        response = self.client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents = prompt,
         )
-        return response.json().get("text", "Error: No response")
+        return response.text

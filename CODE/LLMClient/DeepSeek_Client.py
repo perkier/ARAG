@@ -17,7 +17,7 @@ class DeepSeekClient(LLMClient):
     def generate_text(self, prompt: str) -> str:
         response = requests.post(
             self.BASE_URL,
-            headers={"Authorization": f"Bearer {self.api_key}"},
+            headers={"Authorization": f"Bearer {self.password}"},
             json={"prompt": prompt}
         )
         return response.json().get("text", "Error: No response")

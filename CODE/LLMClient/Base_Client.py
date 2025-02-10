@@ -1,12 +1,6 @@
-import requests
-import configparser
+import json
 import os
 from abc import ABC, abstractmethod
-
-# Load API keys from config file
-CONFIG_PATH = os.path.join(os.path.dirname(__file__), "../cfg/api_keys.cfg")
-config = configparser.ConfigParser()
-config.read(CONFIG_PATH)
 
 class LLMClient(ABC):
     """
@@ -16,13 +10,22 @@ class LLMClient(ABC):
 
         self.service_name: str = service_name
 
-        self.keys = self.get_api_key()
+        self.get_api_key()
 
-        if not self.keys:
-            raise ValueError("API key is required")
+        #if not self.keys:
+        #    raise ValueError("API key is required")
 
     def get_api_key(self) -> str:
-        return config.get("API_KEYS", self.service_name, fallback=None)
+
+        # Set the path to your DeepSeek.json file
+        file_path = os.path.join('..', 'cfg', f'{self.service_name}.json')
+
+        # Open and load the JSON file
+        with open(file_path, 'r') as f:
+            config = json.load(f)
+
+        self.username = config["username"]
+        self.password = config["password"]
 
     @abstractmethod
     def generate_text(self, prompt: str) -> str:
