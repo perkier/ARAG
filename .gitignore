@@ -171,4 +171,4 @@ cython_debug/
 .pypirc
 
 # cfg - Secrets folder
-cfg/*
+cfg/
